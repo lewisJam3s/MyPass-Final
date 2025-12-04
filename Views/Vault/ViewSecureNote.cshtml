@@ -1,0 +1,52 @@
+﻿@model MyPass.Models.ViewModels.Vault.SecureNoteViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "View Secure Note";
+    Layout = "_Layout";
+}
+<h2>View Secure Note</h2>
+
+<div class="card p-4 shadow-sm" style="max-width: 600px;">
+    <h4>@Model.NoteTitle</h4>
+
+    <textarea id="noteField" class="form-control mt-3" rows="10" readonly>@Model.NoteContent</textarea>
+
+    <div class="mt-2">
+        <button id="toggleNote" class="btn btn-outline-secondary"><i class="bi bi-eye-slash"></i> Reveal</button>
+        <button class="btn btn-outline-primary copy-btn" data-value="@Model.NoteContent">Copy</button>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mt-4">Back</a>
+</div>
+
+@section Scripts {
+    <script>
+        const noteField = document.getElementById("noteField");
+        const toggleNote = document.getElementById("toggleNote");
+        const icon = toggleNote.querySelector("i");
+
+        toggleNote.addEventListener("click", () => {
+            const isHidden = noteField.type === "password";
+
+            if (noteField.hasAttribute("readonly"))
+                noteField.removeAttribute("readonly");
+            else
+                noteField.setAttribute("readonly", "readonly");
+
+            icon.className = noteField.hasAttribute("readonly") ? "bi bi-eye-slash" : "bi bi-eye";
+        });
+
+        document.querySelector(".copy-btn").addEventListener("click", async (e) => {
+            await navigator.clipboard.writeText(e.target.dataset.value);
+            e.target.textContent = "Copied!";
+            e.target.classList.replace("btn-outline-primary", "btn-success");
+
+            setTimeout(() => {
+                e.target.textContent = "Copy";
+                e.target.classList.replace("btn-success", "btn-outline-primary");
+            }, 1500);
+        });
+    </script>
+}
+
+

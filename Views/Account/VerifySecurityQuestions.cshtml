@@ -1,0 +1,143 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model MyPass.Models.ViewModels.Account.VerifySecurityQuestionsViewModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Verify Security Questions";
+}
+
+<div class="container mt-5" style="max-width: 500px;">
+    <h2 class="mb-3 text-center">Verify Security Questions</h2>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    <p class="text-muted">
+        Answer your three security questions and choose a new master password.
+    </p>
+
+    <form asp-action="VerifySecurityQuestions" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" asp-for="Email" />
+
+        <div class="mb-3">
+            <label class="form-label">@Model.Question1</label>
+            <input asp-for="Answer1" class="form-control" />
+            <span asp-validation-for="Answer1" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Model.Question2</label>
+            <input asp-for="Answer2" class="form-control" />
+            <span asp-validation-for="Answer2" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">@Model.Question3</label>
+            <input asp-for="Answer3" class="form-control" />
+            <span asp-validation-for="Answer3" class="text-danger"></span>
+        </div>
+
+        <hr />
+
+        <h5 class="fw-bold mt-3 mb-3">Reset Your Master Password</h5>
+
+        <div class="mb-3">
+            <label class="form-label">New Master Password</label>
+            <div class="input-group">
+                <input asp-for="NewPassword" type="password" class="form-control" id="newPw" />
+                <button type="button" class="btn btn-secondary" id="generateBtn">Generate</button>
+                <button type="button" class="btn btn-outline-secondary" id="toggleNewPw">
+                    <i class="bi bi-eye-slash" id="toggleNewPwIcon"></i>
+                </button>
+            </div>
+            <small id="pwStrength" class="text-muted"></small>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Confirm New Password</label>
+            <div class="input-group">
+                <input asp-for="ConfirmNewPassword" type="password" class="form-control" id="confirmPw" />
+                <button type="button" class="btn btn-outline-secondary" id="toggleConfirmPw">
+                    <i class="bi bi-eye-slash" id="toggleConfirmPwIcon"></i>
+                </button>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Reset Password</button>
+    </form>
+</div>
+@section Scripts {
+    <script>
+
+        //   PASSWORD GENERATOR
+        const newPw = document.getElementById("newPw");
+        const generateBtn = document.getElementById("generateBtn");
+
+        generateBtn.addEventListener("click", async () => {
+            const res = await fetch("/Account/GenerateStrongPassword", { method: "POST" });
+            const data = await res.json();
+            newPw.value = data.password;
+            checkStrength();
+        });
+
+
+
+        //   PASSWORD STRENGTH METER
+
+        const pwStrength = document.getElementById("pwStrength");
+
+        newPw.addEventListener("input", checkStrength);
+
+        function checkStrength() {
+            const p = newPw.value;
+
+            let score = 0;
+            if (p.length >= 12) score++;
+            if (/[A-Z]/.test(p)) score++;
+            if (/[0-9]/.test(p)) score++;
+            if (/[^A-Za-z0-9]/.test(p)) score++;
+
+            if (p.length === 0) {
+                pwStrength.textContent = "";
+                pwStrength.style.color = "";
+                return;
+            }
+
+            if (score <= 1) {
+                pwStrength.textContent = "Weak password ❌";
+                pwStrength.style.color = "red";
+            } else if (score === 2) {
+                pwStrength.textContent = "Okay password ⚠️";
+                pwStrength.style.color = "orange";
+            } else {
+                pwStrength.textContent = "Strong password ✔️";
+                pwStrength.style.color = "green";
+            }
+        }
+
+
+        //   TOGGLE VISIBILITY
+
+        const toggleNew = document.getElementById("toggleNewPw");
+        const newIcon = document.getElementById("toggleNewPwIcon");
+
+        toggleNew.addEventListener("click", () => {
+            const isHidden = newPw.type === "password";
+            newPw.type = isHidden ? "text" : "password";
+            newIcon.className = isHidden ? "bi bi-eye" : "bi bi-eye-slash";
+        });
+
+        const confirmPw = document.getElementById("confirmPw");
+        const toggleConfirm = document.getElementById("toggleConfirmPw");
+        const confirmIcon = document.getElementById("toggleConfirmPwIcon");
+
+        toggleConfirm.addEventListener("click", () => {
+            const isHidden = confirmPw.type === "password";
+            confirmPw.type = isHidden ? "text" : "password";
+            confirmIcon.className = isHidden ? "bi bi-eye" : "bi bi-eye-slash";
+        });
+    </script>
+}

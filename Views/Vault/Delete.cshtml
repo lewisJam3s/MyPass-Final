@@ -1,0 +1,17 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout"; 
+}
+<h2>Delete Item</h2>
+
+<p>
+    Are you sure you want to delete <strong>@ViewBag.ItemName</strong>?
+</p>
+
+<form asp-action="ConfirmDelete" asp-controller="Vault" asp-route-id="@ViewBag.Id" method="post">
+    @Html.AntiForgeryToken()
+
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a asp-action="Index" asp-controller="Vault" class="btn btn-secondary">Cancel</a>
+</form>
+

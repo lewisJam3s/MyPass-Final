@@ -1,0 +1,36 @@
+﻿@model MyPass.Models.ViewModels.Vault.IdentityItemViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Edit Identity";
+    Layout = "_Layout";  
+}
+<h2>Edit Identity</h2>
+
+<form method="post" asp-action="SaveEditIdentity">
+	@Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Full Name</label>
+        <input asp-for="FullName" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>New Passport Number</label>
+        <input asp-for="PassportNumber" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>New License Number</label>
+        <input asp-for="LicenseNumber" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>New SSN</label>
+        <input asp-for="SSN" class="form-control" />
+    </div>
+
+    <button class="btn btn-primary">Save</button>
+    <a asp-controller="Vault" asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+</form>
+

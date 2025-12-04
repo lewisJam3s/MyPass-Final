@@ -1,0 +1,26 @@
+﻿@model MyPass.Models.ViewModels.Vault.SecureNoteViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Edit Secure Note";
+    Layout = "_Layout"; 
+}
+<h2>Edit Note</h2>
+
+<form method="post" asp-action="SaveEditSecureNote">
+	@Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Title</label>
+        <input asp-for="NoteTitle" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Content</label>
+        <textarea asp-for="NoteContent" class="form-control" rows="5"></textarea>
+    </div>
+
+    <button class="btn btn-primary">Save</button>
+    <a asp-controller="Vault" asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+</form>
+

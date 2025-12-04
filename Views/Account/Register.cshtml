@@ -1,0 +1,133 @@
+﻿@model MyPass.Models.ViewModels.Account.RegisterViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = "_Layout";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="card shadow-lg p-4" style="width: 450px; border-radius: 16px;">
+        <h3 class="text-center mb-4 fw-bold">Create Your Account</h3>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger">@ViewBag.Error</div>
+        }
+
+        <form asp-action="Register" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label>Email</label>
+                <input asp-for="Email" class="form-control" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <!-- PASSWORD FIELD + GENERATE + SHOW/HIDE -->
+            <div class="mb-3">
+                <label>Master Password</label>
+
+                <div class="input-group">
+                    <input asp-for="MasterPassword"
+                           type="password"
+                           class="form-control"
+                           id="mpwField"
+                           required />
+
+                    <!-- Generate -->
+                    <button type="button" class="btn btn-secondary" id="generateBtn">
+                        Generate
+                    </button>
+
+                    <!-- Show/Hide -->
+                    <button type="button" class="btn btn-outline-secondary" id="toggleMpw">
+                        <i class="bi bi-eye-slash" id="toggleIcon"></i>
+                    </button>
+                </div>
+
+                <small id="pwStrength" class="text-muted"></small>
+            </div>
+
+            <hr />
+
+            <h5 class="fw-bold">Security Questions</h5>
+
+            <div class="mb-3">
+                <input asp-for="Question1" class="form-control mb-2" placeholder="Question 1" />
+                <input asp-for="Answer1" class="form-control" placeholder="Answer 1" />
+            </div>
+
+            <div class="mb-3">
+                <input asp-for="Question2" class="form-control mb-2" placeholder="Question 2" />
+                <input asp-for="Answer2" class="form-control" placeholder="Answer 2" />
+            </div>
+
+            <div class="mb-3">
+                <input asp-for="Question3" class="form-control mb-2" placeholder="Question 3" />
+                <input asp-for="Answer3" class="form-control" placeholder="Answer 3" />
+            </div>
+
+            <button type="submit" class="btn btn-success w-100 mt-3">Create Account</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <a href="/Account/Login">Back to Login</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ELEMENTS
+    const mpwField = document.getElementById("mpwField");
+    const generateBtn = document.getElementById("generateBtn");
+    const toggleBtn = document.getElementById("toggleMpw");
+    const toggleIcon = document.getElementById("toggleIcon");
+    const strengthText = document.getElementById("pwStrength");
+
+    // ---- GENERATE PASSWORD ----
+    generateBtn.addEventListener("click", async () => {
+        const res = await fetch("/Account/GenerateStrongPassword", { method: "POST" });
+        const data = await res.json();
+        mpwField.value = data.password;
+        updateStrength();
+    });
+
+    // ---- SHOW / HIDE PASSWORD ----
+    toggleBtn.addEventListener("click", () => {
+        const hidden = mpwField.type === "password";
+        mpwField.type = hidden ? "text" : "password";
+        toggleIcon.className = hidden ? "bi bi-eye" : "bi bi-eye-slash";
+    });
+
+    // ---- PASSWORD STRENGTH ----
+    mpwField.addEventListener("input", updateStrength);
+
+    function updateStrength() {
+        const p = mpwField.value;
+        let score = 0;
+
+        if (p.length >= 12) score++;
+        if (/[A-Z]/.test(p)) score++;
+        if (/[0-9]/.test(p)) score++;
+        if (/[^A-Za-z0-9]/.test(p)) score++;
+
+        if (p.length === 0) {
+            strengthText.textContent = "";
+            return;
+        }
+
+        if (score <= 1) {
+            strengthText.textContent = "Weak password ❌";
+            strengthText.style.color = "red";
+        } else if (score === 2) {
+            strengthText.textContent = "Okay password ⚠️";
+            strengthText.style.color = "orange";
+        } else {
+            strengthText.textContent = "Strong password ✔️";
+            strengthText.style.color = "green";
+        }
+    }
+</script>
+
+
+

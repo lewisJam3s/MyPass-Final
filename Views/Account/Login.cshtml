@@ -1,0 +1,68 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model MyPass.Models.ViewModels.Account.LoginViewModel
+@{
+    Layout = "_Layout";
+}
+
+<div class="container mt-5" style="max-width:400px;">
+    <h2 class="mb-4 text-center">Login</h2>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger">@ViewBag.Error</div>
+    }
+
+    <form method="post" asp-action="Login" asp-controller="Account">
+        @Html.AntiForgeryToken()
+
+        <div class="mb-3">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="MasterPassword"></label>
+            <div class="input-group">
+                <input asp-for="MasterPassword"
+                       class="form-control"
+                       id="loginPassword"
+                       type="password" />
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        id="toggleLoginPw">
+                    <i class="bi bi-eye-slash" id="loginToggleIcon"></i>
+                </button>
+            </div>
+            <span asp-validation-for="MasterPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+
+    <div class="text-center mt-3">
+        <a href="/Account/Register">Create Account</a>
+    </div>
+    <div class="text-center mt-3">
+        <a asp-controller="Account" asp-action="ForgotPassword">Forgot master password?</a> 
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            const pwField = document.getElementById("loginPassword");
+            const toggleBtn = document.getElementById("toggleLoginPw");
+            const toggleIcon = document.getElementById("loginToggleIcon");
+
+            if (!pwField || !toggleBtn || !toggleIcon) return;
+
+            toggleBtn.addEventListener("click", function () {
+                const isHidden = pwField.type === "password";
+                pwField.type = isHidden ? "text" : "password";
+                toggleIcon.className = isHidden ? "bi bi-eye" : "bi bi-eye-slash";
+            });
+        })();
+    </script>
+}
+

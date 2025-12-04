@@ -1,0 +1,81 @@
+﻿@model MyPass.Models.ViewModels.Vault.IdentityItemViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "View Identity";
+    Layout = "_Layout";
+}
+<h2>View Identity</h2>
+
+<div class="card p-4 shadow-sm" style="max-width: 500px;">
+    <h4>@Model.FullName</h4>
+
+    <div class="mb-3">
+        <label>Passport Number:</label>
+        <div class="input-group">
+            <input id="passportField"
+                   type="password"
+                   class="form-control"
+                   value="@Model.PassportNumber"
+                   readonly />
+
+            <button type="button" id="togglePassport" class="btn btn-outline-secondary">
+                <i class="bi bi-eye-slash"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>License Number:</label>
+        <div class="input-group">
+            <input id="licenseField"
+                   type="password"
+                   class="form-control"
+                   value="@Model.LicenseNumber"
+                   readonly />
+
+            <button type="button" id="toggleLicense" class="btn btn-outline-secondary">
+                <i class="bi bi-eye-slash"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label>SSN:</label>
+        <div class="input-group">
+            <input id="ssnField"
+                   type="password"
+                   class="form-control"
+                   value="@Model.SSN"
+                   readonly />
+
+            <button type="button" id="toggleSSN" class="btn btn-outline-secondary">
+                <i class="bi bi-eye-slash"></i>
+            </button>
+        </div>
+    </div>
+
+    <a asp-action="Index" class="btn btn-secondary mt-4">Back</a>
+</div>
+
+@section Scripts {
+    <script>
+        function setupToggle(fieldId, toggleId) {
+            const field = document.getElementById(fieldId);
+            const toggle = document.getElementById(toggleId);
+            const icon = toggle.querySelector("i");
+
+            toggle.addEventListener("click", () => {
+                const isHidden = field.type === "password";
+                field.type = isHidden ? "text" : "password";
+                icon.className = isHidden ? "bi bi-eye" : "bi bi-eye-slash";
+            });
+        }
+
+        setupToggle("passportField", "togglePassport");
+        setupToggle("licenseField", "toggleLicense");
+        setupToggle("ssnField", "toggleSSN");
+    </script>
+}
+
+
+

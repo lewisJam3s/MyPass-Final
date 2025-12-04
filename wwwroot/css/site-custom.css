@@ -1,0 +1,8 @@
+﻿.list-group-item {
+    transition: 0.15s ease-in-out;
+}
+
+    .list-group-item:hover {
+        transform: scale(1.01);
+        background-color: #fafafa;
+    }

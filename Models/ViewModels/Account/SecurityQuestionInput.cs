@@ -1,0 +1,8 @@
+﻿namespace MyPass.Models.ViewModels.Account
+{
+    public class SecurityQuestionInput
+    {
+        public string Question { get; set; } = string.Empty;
+        public string Answer { get; set; } = string.Empty;
+    }
+}

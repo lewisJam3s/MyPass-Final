@@ -1,0 +1,73 @@
+﻿@model MyPass.Models.ViewModels.Vault.IdentityItemViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Create Identity";
+    Layout = "_Layout";  
+}
+<h2 class="mb-4">Add Identity</h2>
+
+<form method="post" asp-action="CreateIdentity" asp-controller="Vault">
+    @Html.AntiForgeryToken()
+
+    <div class="mb-3">
+        <label asp-for="FullName" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="FullName" class="form-control" required />
+        </div>
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PassportNumber" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="PassportNumber" class="form-control" type="password" id="passportField" required />
+            <button type="button" class="btn btn-outline-secondary" id="togglePassport">
+                <i class="bi bi-eye-slash" id="passportIcon"></i>
+            </button>
+        </div>
+        <span asp-validation-for="PassportNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="LicenseNumber" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="LicenseNumber" class="form-control" type="password" id="licenseField" required />
+            <button type="button" class="btn btn-outline-secondary" id="toggleLicense">
+                <i class="bi bi-eye-slash" id="licenseIcon"></i>
+            </button>
+        </div>
+        <span asp-validation-for="LicenseNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="SSN" class="form-label"></label>
+        <div class="input-group">
+            <input asp-for="SSN" class="form-control" type="password" id="ssnField" required />
+            <button type="button" class="btn btn-outline-secondary" id="toggleSSN">
+                <i class="bi bi-eye-slash" id="ssnIcon"></i>
+            </button>
+        </div>
+        <span asp-validation-for="SSN" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Save Identity</button>
+</form>
+
+<!-- Mask / Unmask Toggles -->
+<script>
+    function makeToggle(fieldId, iconId, btnId) {
+        const field = document.getElementById(fieldId);
+        const icon = document.getElementById(iconId);
+        const btn = document.getElementById(btnId);
+
+        btn.addEventListener("click", () => {
+            const hidden = field.type === "password";
+            field.type = hidden ? "text" : "password";
+            icon.className = hidden ? "bi bi-eye" : "bi bi-eye-slash";
+        });
+    }
+
+    makeToggle("passportField", "passportIcon", "togglePassport");
+    makeToggle("licenseField", "licenseIcon", "toggleLicense");
+    makeToggle("ssnField", "ssnIcon", "toggleSSN");
+</script>

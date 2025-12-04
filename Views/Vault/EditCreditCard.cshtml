@@ -1,0 +1,40 @@
+﻿@model MyPass.Models.ViewModels.Vault.CreditCardViewModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "Edit Credit Card";
+    Layout = "_Layout";  
+}
+<h2>Edit Credit Card</h2>
+
+<form method="post" asp-action="SaveEditCreditCard">
+	@Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+
+    <div class="mb-3">
+        <label>Card Holder</label>
+        <input asp-for="CardHolder" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>New Card Number (optional)</label>
+        <input asp-for="CardNumber" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>New CVV</label>
+        <input asp-for="CVV" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label>Exp Month</label>
+        <input asp-for="ExpMonth" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Exp Year</label>
+        <input asp-for="ExpYear" class="form-control" required />
+    </div>
+
+    <button class="btn btn-primary">Save</button>
+    <a asp-controller="Vault" asp-action="Index" class="btn btn-secondary ms-2">Back</a>
+</form>
